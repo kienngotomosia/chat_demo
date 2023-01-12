@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_demo/constants/constants.dart';
+import 'package:flutter_chat_demo/dio/dio_firebase.dart';
 import 'package:flutter_chat_demo/models/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -43,7 +44,7 @@ class ChatProvider {
         .doc(groupChatId)
         .collection(groupChatId)
         .doc(DateTime.now().millisecondsSinceEpoch.toString());
-
+       
     MessageChat messageChat = MessageChat(
       idFrom: currentUserId,
       idTo: peerId,
@@ -51,6 +52,7 @@ class ChatProvider {
       content: content,
       type: type,
     );
+     DioClient().sendMessageToFirebase(messageChat);
 
     FirebaseFirestore.instance.runTransaction((transaction) async {
       transaction.set(

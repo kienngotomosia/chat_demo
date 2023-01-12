@@ -72,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   );
                 })
-                  ..catchError((error, stackTrace) {
+                  .catchError((error, stackTrace) {
                     Fluttertoast.showToast(msg: error.toString());
                     authProvider.handleException();
                   });

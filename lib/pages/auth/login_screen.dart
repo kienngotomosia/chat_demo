@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_demo/pages/auth/register_screen.dart';
 import 'package:flutter_chat_demo/pages/pages.dart';
 import 'package:flutter_chat_demo/providers/auth_provider.dart';
 import 'package:flutter_chat_demo/widgets/button/custom_button.dart';
@@ -65,16 +66,11 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             GestureDetector(
-              onTap: () async {
-                authProvider
-                    .login(_emailController.text.trim(),
-                        _passwordController.text.trim())
-                    .then((value) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => LoginScreen()));
-                });
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const RegisterScreen()));
               },
-              child: Text('Sign up'),
+              child: const Text('Sign up'),
             ),
           ],
         ),

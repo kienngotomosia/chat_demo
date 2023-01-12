@@ -12,6 +12,7 @@ import 'constants/color_constants.dart';
 import 'pages/pages.dart';
 import 'providers/providers.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  MyApp({required this.prefs});
+  MyApp({super.key, required this.prefs});
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +35,27 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthProvider(
             firebaseAuth: FirebaseAuth.instance,
             googleSignIn: GoogleSignIn(),
-            prefs: this.prefs,
-            firebaseFirestore: this.firebaseFirestore,
+            prefs: prefs,
+            firebaseFirestore: firebaseFirestore,
           ),
         ),
         Provider<SettingProvider>(
           create: (_) => SettingProvider(
-            prefs: this.prefs,
-            firebaseFirestore: this.firebaseFirestore,
-            firebaseStorage: this.firebaseStorage,
+            prefs: prefs,
+            firebaseFirestore: firebaseFirestore,
+            firebaseStorage: firebaseStorage,
           ),
         ),
         Provider<HomeProvider>(
           create: (_) => HomeProvider(
-            firebaseFirestore: this.firebaseFirestore,
+            firebaseFirestore: firebaseFirestore,
           ),
         ),
         Provider<ChatProvider>(
           create: (_) => ChatProvider(
-            prefs: this.prefs,
-            firebaseFirestore: this.firebaseFirestore,
-            firebaseStorage: this.firebaseStorage,
+            prefs: prefs,
+            firebaseFirestore: firebaseFirestore,
+            firebaseStorage: firebaseStorage,
           ),
         ),
       ],
@@ -64,7 +65,23 @@ class MyApp extends StatelessWidget {
           primaryColor: ColorConstants.themeColor,
           primarySwatch: MaterialColor(0xfff5a623, ColorConstants.swatchColor),
         ),
-        home: SplashPage(),
+        initialRoute: "/",
+        navigatorKey: navigatorKey,
+        onGenerateRoute: (RouteSettings settings) {
+          switch (settings.name) {
+            case "/":
+              return MaterialPageRoute(
+                  builder: (builder) => const SplashPage());
+            default:
+              final args = settings.arguments as Map<dynamic, dynamic>;
+              ChatPageArguments arguments = ChatPageArguments(
+                  peerId: args["peerId"],
+                  peerAvatar: args["peerAvatar"],
+                  peerNickname: args[" peerNickname"]);
+              return MaterialPageRoute(
+                  builder: (_) => ChatPage(arguments: arguments));
+          }
+        },
         debugShowCheckedModeBanner: false,
       ),
     );

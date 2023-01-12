@@ -2,7 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_demo/constants/constants.dart';
+import 'package:flutter_chat_demo/firebase_options.dart';
+import 'package:flutter_chat_demo/main.dart';
 import 'package:flutter_chat_demo/models/models.dart';
+import 'package:flutter_notification/flutter_notification.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -95,6 +98,13 @@ class AuthProvider extends ChangeNotifier {
       await prefs.setString(FirestoreConstants.photoUrl,
           userCredential.user!.photoURL ?? doc.data()!['photoUrl']);
       _status = Status.authenticated;
+      FlutterNotification flutterNotification = FlutterNotification.instance;
+      await flutterNotification.initialize(
+        DefaultFirebaseOptions.currentPlatform,
+        iconLink: "@mipmap/ic_launcher",
+        key: navigatorKey, backGround: (){}, foreGround: (){},
+      );
+      print("in demo >>>>>"+flutterNotification.hashCode.toString());
       notifyListeners();
 
       return true;
@@ -126,7 +136,7 @@ class AuthProvider extends ChangeNotifier {
             .where(FirestoreConstants.id, isEqualTo: firebaseUser.uid)
             .get();
         final List<DocumentSnapshot> documents = result.docs;
-        if (documents.length == 0) {
+        if (documents.isEmpty) {
           // Writing data to server because here is a new user
           firebaseFirestore
               .collection(FirestoreConstants.pathUserCollection)

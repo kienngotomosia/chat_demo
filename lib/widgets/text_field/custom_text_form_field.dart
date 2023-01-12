@@ -17,13 +17,13 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       cursorColor: Colors.black,
-      style: TextStyle(
+      style: const TextStyle(
           fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),
       decoration: InputDecoration(
         fillColor: Colors.grey[50],
         filled: true,
         labelText: label,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
             fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
